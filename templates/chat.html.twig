@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<div class="chat">
+  {% for message in messages %}
+      <div class="message">
+        {{ message.text}}
+        <sub>{{ message.sentAt|date('Y-m-d H:i:s', 'Asia/Almaty') }}</sub>
+        <a class="btn btn-danger" href="{{ path('message_delete', {'id':message.id})}}">X</a>
+      </div>
+  {% else %}
+      <div>No messages found.</div>
+  {% endfor %}
+</div>
+{{ form(form)}}
+
+{# <form method="POST">
+  <textarea name="text" class="form-control"></textarea>
+  <input type="submit" value="Send" class="btn btn-success">
+</form> #}
+{% endblock %}
