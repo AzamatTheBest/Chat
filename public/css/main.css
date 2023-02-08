@@ -1,0 +1,17 @@
+.chat-window {
+    position: relative;
+    height: 400px;
+    overflow-x: hidden !important;
+    overflow-y: scroll;
+    overflow-anchor: none;
+    touch-action: auto;
+}
+form.chat-form {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+
+div.prototypes {
+    display: none;
+}

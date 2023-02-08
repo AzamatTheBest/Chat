@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Chat;
 
 
 #[ORM\Entity]
@@ -19,6 +20,9 @@ class Message
 
     #[ORM\Column(type: 'datetime')]
     private $sentAt;
+
+    #[ORM\ManyToOne(targetEntity: Chat::class, inversedBy: 'messages')]
+    private Chat $chat;
 
     public function __construct(?string $text = null)
     {
@@ -48,4 +52,20 @@ class Message
     public function getSentAt(){
         return $this->sentAt;
     }
+
+	/**
+	 * @return Chat
+	 */
+	public function getChat(): Chat {
+		return $this->chat;
+	}
+	
+	/**
+	 * @param Chat $chat 
+	 * @return self
+	 */
+	public function setChat(Chat $chat): self {
+		$this->chat = $chat;
+		return $this;
+	}
 }

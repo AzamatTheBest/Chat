@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="chat_list">
+        {% for chat in chats %}
+            <div class="chat_item" style="margin-bottom: 20px;">
+                {{ chat.title ?? 'Private'}}
+                <a href="{{ path('chat_edit', {'chat': chat.id}) }}"  class="btn btn-primary stretched-link">Edit chat</a>
+                <a href="{{ path('chat_delete', {'chat': chat.id}) }}"  class="btn btn-danger">Delete chat</a>
+            </div>
+        {% else %}
+        <div class='chat_item'>No messages found.</div>
+        {% endfor %}
+    </div>
+
+    {{ form_start(form)}}
+        {{ form_row(form.title) }}
+        {{ form_row(form.description) }}
+    <div class="mb-3">
+        <button class="btn btn-success" type="submit">Create</button>
+    </div>
+{% endblock %}

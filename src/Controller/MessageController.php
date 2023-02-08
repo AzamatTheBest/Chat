@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Chat;
 use App\Entity\Message;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,46 +15,55 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MessageController extends AbstractController
 {
-    #[Route('/message/create/{chatId}', name: 'message_create', requirements: ['chatId' =>'\d+'])]
-    public function create(Request $request, int $chatId, EntityManagerInterface $em)
+    
+     #[Route('/chat/{chat}', name: 'chat_send_message', requirements: ['chat' =>'\d+'], methods: ['POST'])]
+    public function create(Request $request, Chat $chat, EntityManagerInterface $em)
     {
-        // $text = $request->request->get('text');
-        
-        // if($text){
-        //     $message = new Message($text);
-        //     $em->persist($message);
-        //     $em->flush();
-        // }
-
-        $form = $this->createForm(MessageType::class);
+        $message = new Message();
+        $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
         if($form->isSubmitted()){
-            $em->persist($form->getData());
+            $message->setChat($chat);
+            $em->persist($message);
             $em->flush();
-            return $this->redirectToRoute('message_create', [
-                'chatId' => $chatId,
-            ]);
+           
         }
-        
-        return $this->render('chat.html.twig', [
-            'messages' => $em->getRepository(Message::class)->findAll(),
-            'form'     => $form->createView(),
-        ]);
+
+        return new Response();
     }
 
 
-    #[Route('/message/delete/{id}', name: 'message_delete', requirements: ['id' =>'\d+'])]
-    public function delete(int $id, EntityManagerInterface $em)
+    // #[Route('/message/create/{chat}', name: 'message_create', requirements: ['chat' =>'\d+'])]
+    // public function create(Request $request, Chat $chat, EntityManagerInterface $em)
+    // {
+    //     $message = new Message();
+    //     $form = $this->createForm(MessageType::class, $message);
+    //     $form->handleRequest($request);
+    //     if($form->isSubmitted()){
+    //         $message->setChat($chat);
+    //         $em->persist($message);
+    //         $em->flush();
+    //         return $this->redirectToRoute('message_create', [
+    //             'chat' => $chat->getId(),
+    //         ]);
+    //     }
+        
+    //     return $this->render('chat.html.twig', [
+    //         'messages' => $chat->getMessages(),
+    //         'form'     => $form->createView(),
+    //     ]);
+    // }
+
+
+    #[Route('/message/delete/{message}', name: 'message_delete', requirements: ['message' =>'\d+'])]
+    public function delete(Message $message, EntityManagerInterface $em)
     {
-        $message = $em->getRepository(Message::class)->find($id);
-        if(!$message){
-            throw $this->createNotFoundException();
-        }
+        
         $em->remove($message);
         $em->flush();
-
-        return $this->redirectToRoute('message_create', [
-            'chatId' => 1,
+        
+        return $this->redirectToRoute('chat_view', [
+            'chat' => $message->getChat()->getId(),
         ]);
     }
 
