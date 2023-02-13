@@ -5,6 +5,7 @@ use App\Entity\Chat;
 use App\Entity\Message;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,18 +16,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MessageController extends AbstractController
 {
-    
-     #[Route('/chat/{chat}', name: 'chat_send_message', requirements: ['chat' =>'\d+'], methods: ['POST'])]
+  
+    #[Route('/chat/{chat}', name: 'chat_send_message', requirements: ['chat' =>'\d+'], methods: ['POST'])]
     public function create(Request $request, Chat $chat, EntityManagerInterface $em)
     {
         $message = new Message();
+        $message->setSender($this->getUser());
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
-        if($form->isSubmitted()){
+        if ($form->isSubmitted()) {
             $message->setChat($chat);
             $em->persist($message);
             $em->flush();
-           
         }
 
         return new Response();

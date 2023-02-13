@@ -15,3 +15,13 @@ form.chat-form {
 div.prototypes {
     display: none;
 }
+.chat-form {
+    margin-left: 10px;
+}
+.chat-btn {
+    background: none;
+    border: none;
+    height: 16px;
+    padding: 12px 0 0 0;
+    color: #59a6ff;
+}

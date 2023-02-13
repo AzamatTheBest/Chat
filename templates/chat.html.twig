@@ -1,18 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-
-        {# {% for message in messages %}
-            <div class="message">
-                {{ message.text }}
-                <sub>{{ message.sentAt|date('Y-m-d H:i:s', 'Asia/Almaty') }}</sub>
-                <sup><a class="btn btn-sm btn-danger" href="{{ path('message_delete', {'message': message.id}) }}">X</a></sup>
-            </div>
-        {% else %}
-            <div>No messages found.</div>
-        {% endfor %} #}
-
-<section style="background-color: #eee;">
+<section style="background-color: #fff;">
   <div class="container py-5">
 
     <div class="row d-flex justify-content-center">
@@ -25,6 +14,17 @@
           <div class="card-body chat-window">
 
         {% for message in messages %}
+          {% if message.sender == app.user %}
+            <div class="d-flex flex-row justify-content-end">
+              <div>
+                <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">{{ message.text }}
+                </p>
+                <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">{{ message.sentAt|date('H:i', 'Asia/Almaty') }}</p>
+              </div>
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp"
+                alt="avatar 1" style="width: 45px; height: 100%;">
+            </div>
+        {% else %}
             <div class="d-flex flex-row justify-content-start mb-4">
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
                 alt="avatar 1" style="width: 45px; height: 100%;">
@@ -33,7 +33,9 @@
                 <p class="small ms-3 mb-3 rounded-3 text-muted">{{ message.sentAt|date('H:i', 'Asia/Almaty') }}</p>
               </div>
             </div>
+        {% endif %}
 
+   
         {% endfor %}
             {# <div class="d-flex flex-row justify-content-end">
               <div>
@@ -52,9 +54,9 @@
               {{ form_start(form) }}
               {{ form_widget(form.text) }}
         
-              <a class="ms-1 text-muted" href="#!"><i class="fas fa-paperclip"></i></a>
-              <a class="ms-3 text-muted" href="#!"><i class="fas fa-smile"></i></a>
-              <button id="send_message" class="ms-3" type="submit"><i class="fas fa-paper-plane"></i></button>
+              <a class="ms-1 chat-btn text-muted" href="#!"><i class="fas fa-paperclip"></i></a>
+              <a class="ms-3 chat-btn text-muted" href="#!"><i class="fas fa-smile"></i></a>
+              <button id="send_message" class="ms-3 chat-btn" type="submit"><i class="fas fa-paper-plane"></i></button>
             
               {{ form_end(form) }}
 
@@ -87,3 +89,4 @@
 </section>
 
 {% endblock %}
+

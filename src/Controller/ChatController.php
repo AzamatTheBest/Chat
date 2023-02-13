@@ -2,27 +2,41 @@
 
 namespace App\Controller;
 use App\Entity\Chat;
+use App\Entity\Message;
 use App\Form\ChatType;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 
 class ChatController extends AbstractController
 {
 
-    #[Route('/chat/{chat}', name: 'chat_view', requirements: ['chat' =>'\d+'])]
+    #[Route('/chat/{chat}', name: 'chat_view', requirements: ['chat' =>'\d+'], methods: ['GET'])]
     public function view(Request $request, Chat $chat, EntityManagerInterface $em)
     {
         return $this->render('chat.html.twig', [
             'messages' => $chat->getMessages(),
             'form' => $this->createForm(MessageType::class)->createView(),
         ]);
+    }
+
+
+    #[Route('/chat/{chat}/getMessages', name: 'app_get_messages', requirements: ['chat' =>'\d+'])]
+    public function getLastMessages(Chat $chat, EntityManagerInterface $em, SerializerInterface $serializer)
+    {
+        $messages = $em->getRepository(Message::class)->findBy(['chat' => $chat]);
+        return new JsonResponse(
+            data: $serializer->serialize($messages, 'json', ['groups' => ['message']]),
+            json: true
+        );
     }
 
 

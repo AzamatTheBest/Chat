@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity]
@@ -13,6 +14,7 @@ class Chat
     #[ORM\Id()]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
+	#[Groups('message')]
     private $id;
 
     #[ORM\Column(type: 'string', nullable: true)]
