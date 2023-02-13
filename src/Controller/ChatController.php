@@ -5,6 +5,7 @@ use App\Entity\Chat;
 use App\Entity\Message;
 use App\Form\ChatType;
 use App\Form\MessageType;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,19 +21,22 @@ class ChatController extends AbstractController
 {
 
     #[Route('/chat/{chat}', name: 'chat_view', requirements: ['chat' =>'\d+'], methods: ['GET'])]
-    public function view(Request $request, Chat $chat, EntityManagerInterface $em)
+    public function view(Chat $chat, MessageRepository $messageRepository)
     {
         return $this->render('chat.html.twig', [
-            'messages' => $chat->getMessages(),
+            'messages' => array_reverse($messageRepository->findMessagesPaginated($chat)),
+            'chat' => $chat,
             'form' => $this->createForm(MessageType::class)->createView(),
         ]);
     }
 
 
     #[Route('/chat/{chat}/getMessages', name: 'app_get_messages', requirements: ['chat' =>'\d+'])]
-    public function getLastMessages(Chat $chat, EntityManagerInterface $em, SerializerInterface $serializer)
+    public function getLastMessages(Chat $chat, MessageRepository $messageRepository, SerializerInterface $serializer, Request $request)
     {
-        $messages = $em->getRepository(Message::class)->findBy(['chat' => $chat]);
+        $limit = $request->query->get('limit', 10);
+        $offset = $request->query->get('offset', 0);
+        $messages = $messageRepository->findMessagesPaginated($chat, $limit, $offset);
         return new JsonResponse(
             data: $serializer->serialize($messages, 'json', ['groups' => ['message']]),
             json: true

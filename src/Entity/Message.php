@@ -7,7 +7,7 @@ use App\Entity\Chat;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: MessageRepository::class)]
 #[ORM\Table('messages')]
 class Message
 {
