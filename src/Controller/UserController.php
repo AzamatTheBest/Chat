@@ -3,6 +3,7 @@
 namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegisterType;
+use App\Form\EditType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,6 +49,25 @@ class UserController extends AbstractController
         return $this->render('login.html.twig', [
             'last_username' => $lastUsername,
             'error'         => $error,
+        ]);
+    }
+
+
+    #[Route('/user/edit', name: 'app_edit_user')]
+    public function editUser(Request $request,EntityManagerInterface $em, UserPasswordHasherInterface $hasher)
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(EditType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $em->persist($user);
+            $em->flush();
+            return $this->redirectToRoute('app_register');
+        }
+
+        return $this->render('user_edit.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

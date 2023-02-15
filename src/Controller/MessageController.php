@@ -30,7 +30,10 @@ class MessageController extends AbstractController
             $em->flush();
         }
 
-        return new Response();
+        return $this->json(
+            data: $message,
+            context: ['groups' => ['message']]
+        );
     }
 
 

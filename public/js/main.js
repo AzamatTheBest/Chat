@@ -9,23 +9,15 @@ $(document)
      .on('click', '#send_message', function (e){
        e.preventDefault();
        let form = $(this).closest('form');
+       let formData = form.serialize();
        let input = form.find('input#message_text');
+       input.val('');
        $.ajax({
                 url: sendMessageURL,
                 method: 'POST',
-                data: form.serialize(),
+                data: formData,
                 success: function(data) {
-                    let text = input.val();
-                input.val('');
-                let prototype = $('.message-from-me-prototype').clone();
-                prototype.removeClass('message-from-me-prototype');
-                prototype.find('p.message-text').text(text);
-
-                let date = new Date();
-	            let time = date.getHours()+":"+date.getMinutes();
-                
-                prototype.find('p.message-time').text(time)
-                $('.chat-window').append(prototype);
+                  drawMessage(data);
                 }
             } 
        );
@@ -35,23 +27,47 @@ $(document)
 chatWindow.scroll(function () {
   
   if (chatWindow.scrollTop() == 0){
+     let firstMessage = chatWindow.find('.chat-message:first')
+      let messages = fetchMessages(chatWindow.find('.chat-message').length);
+      let contentIsLoaded = true;
+      $(messages).each(function (e) {
+        drawMessage(this, 'top');
+      });
 
-
-      $.ajax({
-        url: fetchMessageURL,
-        method: 'GET',
-        data: {offset: 10},
-        success: function(data){
-          $(data).each(function (e) {
-            drawMessage(this);
-          })
-        } 
-      })
+      chatWindow.scrollTop(firstMessage.offset().top - 170);
   }
  
-})
+});
 
-function drawMessage(message)
+
+$(document).ready(function () {
+  chatWindow.scrollTop(chatWindow[0].scrollHeight)
+  setInterval(function (){
+    let messages = fetchMessages();
+    $(messages).each(function (e) {
+        drawMessage(this);
+    })
+  }, 5000)
+});
+
+
+function fetchMessages(offset = 0)
+{
+  let messages = [];
+  $.ajax({
+    url: fetchMessageURL,
+    method: 'GET',
+    async: false,
+    data: {offset: offset},
+    success: function(data){
+      messages = data;
+    } 
+  })
+  return messages;
+}
+
+
+function drawMessage(message, place = 'bottom')
 {
   if(chatWindow.find('.chat-message[data-message-id="' + message.id + '"]').length > 0){
     return false;
@@ -74,5 +90,10 @@ function drawMessage(message)
 	let time = date.getHours()+":"+date.getMinutes();
                 
   prototype.find('p.message-time').text(time)
-  $('.chat-window').prepend(prototype);
+  if (place === 'bottom'){
+    chatWindow.append(prototype);
+  }
+  else{
+    chatWindow.prepend(prototype);
+  }
 }
