@@ -40,7 +40,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\OneToOne(targetEntity: Image::class)]
+    #[Groups('message')]
     private ?Image $image = null;
+
+    private $plainPassword;
 
     public function getId(): ?int
     {
@@ -134,6 +137,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 	public function setImage(?Image $image): self {
 		$this->image = $image;
+		return $this;
+	}
+
+
+	public function getPlainPassword() {
+		return $this->plainPassword;
+	}
+	
+
+	public function setPlainPassword($plainPassword): self {
+		$this->plainPassword = $plainPassword;
 		return $this;
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 use App\Entity\User;
+use App\Entity\Image;
 use App\Form\RegisterType;
 use App\Form\EditType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -60,10 +61,16 @@ class UserController extends AbstractController
         $form = $this->createForm(EditType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($imageId = $form->get('image')->getData()){
+                $user->setImage($em->getRepository(Image::class)->find($imageId));
+            }
+            if ($user->getPlainPassword()){
+                $user->setPassword($hasher->hashPassword($user, $user->getPlainPassword()));
+            }
             $em->persist($user);
             $em->flush();
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_edit_user');
         }
 
         return $this->render('user_edit.html.twig', [

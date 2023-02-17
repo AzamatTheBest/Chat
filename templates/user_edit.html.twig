@@ -2,8 +2,14 @@
 {% block body %}
     {{ form_start(form)}}
     {{ form_row(form.username)}}
-    {{ form_row(form.password)}}
-   
+    {{ form_row(form.plainPassword)}}
+    <div class="mb-3">
+       <label class="btn btn-primary" for="upload-image">Upload Image</label>
+       <input type="file" class="upload-image" id="upload-image" style="display: none;">
+    </div>   
+
+    {{ form_row(form.edit)}}
+
    
     {{ form_end(form)}}
     

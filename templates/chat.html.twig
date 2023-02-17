@@ -21,12 +21,24 @@
                 </p>
                 <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">{{ message.sentAt|date('H:i', 'Asia/Almaty') }}</p>
               </div>
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp"
+              <img src="
+              {% if message.sender and message.sender.image %}
+                /{{ message.sender.image.path }}
+              {% else %}
+                https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp
+              {% endif %}
+              "
                 alt="avatar 1" style="width: 45px; height: 100%;">
             </div>
         {% else %}
             <div class="d-flex flex-row justify-content-start mb-4 chat-message">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+              <img src="
+              {% if message.sender and message.sender.image %}
+                /{{ message.sender.image.path }}
+              {% else %}
+                https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp
+              {% endif %}
+              "
                 alt="avatar 1" style="width: 45px; height: 100%;">
               <div>
                 <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">{{ message.text }}</p>
@@ -66,12 +78,12 @@
                   <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary message-text"></p>
                   <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end message-time"></p>
                 </div>
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp"
+                <img class="message-image" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp"
                   alt="avatar 1" style="width: 45px; height: 100%;">
               </div>
 
               <div class="d-flex flex-row justify-content-start mb-4 chat-message message-to-me-prototype">
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                <img class="message-image" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
                   alt="avatar 1" style="width: 45px; height: 100%;">
                 <div>
                   <p class="small p-2 ms-3 mb-1 rounded-3 message-text" style="background-color: #f5f6f7;"></p>

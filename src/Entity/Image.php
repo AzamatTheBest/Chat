@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 
@@ -17,6 +18,7 @@ class Image
     private ?int $id = null;
 
     #[ORM\Column(type: 'string')]
+    #[Groups('message')]
     private string $path;
 
     #[ORM\Column(type: 'string')]
@@ -36,5 +38,10 @@ class Image
 
 	public function getOriginalFilename(): string {
 		return $this->originalFilename;
+	}
+
+	
+	public function getId(): ?int {
+		return $this->id;
 	}
 }

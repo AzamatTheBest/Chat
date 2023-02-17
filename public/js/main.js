@@ -41,13 +41,16 @@ chatWindow.scroll(function () {
 
 
 $(document).ready(function () {
-  chatWindow.scrollTop(chatWindow[0].scrollHeight)
-  setInterval(function (){
+  if(chatWindow.length > 0){
+    chatWindow.scrollTop(chatWindow[0].scrollHeight)
+    setInterval(function (){
     let messages = fetchMessages();
     $(messages).each(function (e) {
         drawMessage(this);
     })
   }, 5000)
+  }
+  
 });
 
 
@@ -85,6 +88,9 @@ function drawMessage(message, place = 'bottom')
   prototype.attr('data-message-id', message.id);
 
   prototype.find('p.message-text').text(message.text);
+  if(message.sender && message.sender.image){
+    prototype.find('img.message-image').attr('src', '/' + message.sender.image.path);
+  }
 
   let date = new Date(message.senAt);
 	let time = date.getHours()+":"+date.getMinutes();
@@ -97,3 +103,20 @@ function drawMessage(message, place = 'bottom')
     chatWindow.prepend(prototype);
   }
 }
+
+const imageUploadURL = '/image/upload';
+$(document)
+    .on('change', '.upload-image', function(e){
+        let fd = new FormData();
+        fd.append('file', this.files[0]);
+        $.ajax({
+          url: imageUploadURL,
+          method: 'POST',
+          data: fd,
+          contentType: false,
+          processData: false,
+          success: function(data){
+            $('input.image-id').val(data.id);
+          },
+        })
+    })
