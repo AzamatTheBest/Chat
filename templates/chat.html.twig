@@ -17,7 +17,8 @@
           {% if message.sender == app.user %}
             <div class="d-flex flex-row justify-content-end chat-message" data-message-id="{{ message.id }}">
               <div>
-                <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">{{ message.text }}
+                <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary" style="position: relative;">{{ message.text }}
+                  <i class="delete-btn" style="position: absolute; top: -10px; right: 0; cursor: pointer; background: red">x</i>
                 </p>
                 <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">{{ message.sentAt|date('H:i', 'Asia/Almaty') }}</p>
               </div>
