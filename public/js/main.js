@@ -69,6 +69,10 @@ function fetchMessages(offset = 0)
   return messages;
 }
 
+// {
+//   $(this).closest('.chat-message').remove()
+
+// }
 
 function drawMessage(message, place = 'bottom')
 {
