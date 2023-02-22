@@ -4,8 +4,10 @@
         {% for chat in chats %}
             <div class="chat_item" style="margin-bottom: 20px;">
                 {{ chat.title ?? 'Private'}}
-                <a href="{{ path('chat_edit', {'chat': chat.id}) }}"  class="btn btn-primary stretched-link">Edit chat</a>
+                <a href="{{ path('chat_edit', {'chat': chat.id}) }}"  class="btn btn-primary">Edit chat</a>
+                {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('chat_delete', {'chat': chat.id}) }}"  class="btn btn-danger">Delete chat</a>
+                {% endif %}
             </div>
         {% else %}
         <div class='chat_item'>No messages found.</div>

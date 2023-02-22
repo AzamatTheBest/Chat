@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -31,9 +32,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = ['ROLE_USER'];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     #[NotBlank]
     #[Regex('/^.{3,180}$/')]
@@ -42,6 +40,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(targetEntity: Image::class)]
     #[Groups('message')]
     private ?Image $image = null;
+
+    #[ORM\ManyToMany(targetEntity: Chat::class, mappedBy: 'users')]
+    private Collection $chats;
 
     private $plainPassword;
 
@@ -129,25 +130,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-	
-	public function getImage(): ?Image {
+	public function getImage(): ?Image 
+    {
 		return $this->image;
 	}
 	
-
-	public function setImage(?Image $image): self {
+	public function setImage(?Image $image): self 
+    {
 		$this->image = $image;
 		return $this;
 	}
 
-
-	public function getPlainPassword() {
+	public function getPlainPassword() 
+    {
 		return $this->plainPassword;
 	}
 	
-
-	public function setPlainPassword($plainPassword): self {
+	public function setPlainPassword($plainPassword): self 
+    {
 		$this->plainPassword = $plainPassword;
 		return $this;
 	}
+
+
+    public function getChats(): Collection
+    {
+        return $this->chats;
+    }
+
+
+    public function setChats(Collection $chats): User
+    {
+        $this->chats = $chats;
+        return $this;
+    }
 }

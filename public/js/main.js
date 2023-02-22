@@ -2,8 +2,12 @@ const chat = $('.chat');
 const chatWindow = chat.find('.chat-window');
 const currentUser = chat.data('user-id');
 
-const sendMessageURL = '/chat/' + chat.data('chat-id');
-const fetchMessageURL = sendMessageURL + '/getMessages';
+let sendMessageURL = '/chat/' + chat.data('chat-id');
+
+let fetchMessageURL = sendMessageURL + '/getMessages';
+const personalURL = '/chat/personal';
+const deleteMessage = chat.find('.delete-btn');
+
 
 $(document)
      .on('click', '#send_message', function (e){
@@ -24,10 +28,34 @@ $(document)
      })
      
      ;
+
+
+
+
+
+// $(document)
+//      .on('click', deleteMessage, function (e){
+//        let message = $(this).closest('.chat-message');
+//        let formData = message.serialize();
+//        $.ajax({
+  
+//          method: 'DELETE',
+         
+//          data: formData,
+//          success: function(data) {
+//             message.remove();
+//          } 
+//        })
+      
+     
+//      })
+
+
 chatWindow.scroll(function () {
   
   if (chatWindow.scrollTop() == 0){
      let firstMessage = chatWindow.find('.chat-message:first')
+     if (firstMessage.length > 0) {
       let messages = fetchMessages(chatWindow.find('.chat-message').length);
       let contentIsLoaded = true;
       $(messages).each(function (e) {
@@ -35,6 +63,7 @@ chatWindow.scroll(function () {
       });
 
       chatWindow.scrollTop(firstMessage.offset().top - 170);
+    }
   }
  
 });
@@ -69,10 +98,56 @@ function fetchMessages(offset = 0)
   return messages;
 }
 
+
 // {
 //   $(this).closest('.chat-message').remove()
 
 // }
+
+const imageUploadURL = '/image/upload';
+
+let currentChatId = null;
+$(document)
+    .on('change', '.upload-image', function(e) {
+        let fd = new FormData();
+        fd.append('file', this.files[0]);
+        $.ajax({
+            url: imageUploadURL,
+            method: 'POST',
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                $('input.image-id').val(data.id);
+            },
+        });
+    })
+    .on('click', '.chat-user', function (e) {
+        const userDiv = $(this);
+        const userId = userDiv.data('user-id');
+        const chatId = userDiv.data('chat-id');
+
+        if (!currentChatId || chatId !== currentChatId) {
+            $.ajax({
+                url: '/chat/personal',
+                method: 'GET',
+                data: {userId: userId},
+                async: false,
+                success: function (data) {
+                    currentChatId = data.id;
+                    userDiv.data('chat-id', data.id);
+                }
+            })
+        }
+        sendMessageURL = '/chat/' + currentChatId;
+        fetchMessageURL = sendMessageURL + '/getMessages';
+        chatWindow.find('.chat-message').remove();
+        $(fetchMessages()).each(function(e){
+          drawMessage(this, 'top');
+        })
+    })
+
+
 
 function drawMessage(message, place = 'bottom')
 {
@@ -108,7 +183,7 @@ function drawMessage(message, place = 'bottom')
   }
 }
 
-const imageUploadURL = '/image/upload';
+
 $(document)
     .on('change', '.upload-image', function(e){
         let fd = new FormData();

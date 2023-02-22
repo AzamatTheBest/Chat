@@ -5,7 +5,7 @@
   <div class="container py-5">
 
     <div class="row d-flex justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-6">
+      <div class="col-md-10 col-lg-8 col-xl-6" style="position: relative">
 
         <div class="card chat" data-chat-id="{{ chat.id }}" data-user-id="{{ app.user.id }}">
           <div class="card-header d-flex justify-content-between align-items-center p-3">
@@ -14,31 +14,31 @@
           <div class="card-body chat-window">
 
         {% for message in messages %}
+
           {% if message.sender == app.user %}
             <div class="d-flex flex-row justify-content-end chat-message" data-message-id="{{ message.id }}">
               <div>
                 <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary" style="position: relative;">{{ message.text }}
-                  <i class="delete-btn" style="position: absolute; top: -10px; right: 0; cursor: pointer; background: red">x</i>
-                </p>
+                <i class="delete-btn" style="position: absolute; top: -10px; right: 0; cursor: pointer; background: red">x</i></p>
                 <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">{{ message.sentAt|date('H:i', 'Asia/Almaty') }}</p>
               </div>
               <img src="
-              {% if message.sender and message.sender.image %}
-                /{{ message.sender.image.path }}
-              {% else %}
-                https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp
-              {% endif %}
-              "
+                {% if message.sender and message.sender.image %}
+                  /{{ message.sender.image.path }}
+                {% else %}
+                  https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp
+                {% endif %}
+                "
                 alt="avatar 1" style="width: 45px; height: 100%;">
             </div>
-        {% else %}
-            <div class="d-flex flex-row justify-content-start mb-4 chat-message">
+          {% else %}
+            <div class="d-flex flex-row justify-content-start mb-4 chat-message" data-message-id="{{ message.id }}">
               <img src="
-              {% if message.sender and message.sender.image %}
-                /{{ message.sender.image.path }}
-              {% else %}
-                https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp
-              {% endif %}
+                {% if message.sender and message.sender.image %}
+                  /{{ message.sender.image.path }}
+                {% else %}
+                  https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp
+                {% endif %}
               "
                 alt="avatar 1" style="width: 45px; height: 100%;">
               <div>
@@ -46,9 +46,10 @@
                 <p class="small ms-3 mb-3 rounded-3 text-muted">{{ message.sentAt|date('H:i', 'Asia/Almaty') }}</p>
               </div>
             </div>
-        {% endif %}
+          {% endif %}
 
-   
+
+
         {% endfor %}
             {# <div class="d-flex flex-row justify-content-end">
               <div>
@@ -95,6 +96,31 @@
           </div>
         </div>
 
+        <div class="chat-users">
+        {% for chatItem in chatData %}
+            <div class="d-flex flex-row justify-content-start mb-1 chat-user" data-user-id="{{ chatItem.user.id }}">
+                <img class="message-image"  src="
+                {% if chatItem.user.image %}
+                  /{{ chatItem.user.image.path }}
+                {% else %}
+                  https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp
+                {% endif %}
+              "
+                  alt="avatar 1" style="width: 45px; height: 100%;">
+                <div class="chat-info">
+                  <p class="small">{{ chatItem.user.username }}</p>
+                  {% set lastMessage = chatItem.lastMessage %}
+                  {% if lastMessage %}
+                    <p class="small text-truncate">{{ lastMessage.sender == app.user ? '<span class="fw-bold">You:</span>  ' }}{{lastMessage.text}}</p>
+                  {% else %}
+                    <p class="small">No messages...</p>
+                  {% endif %}
+                  
+                </div>
+              </div>
+        {% endfor %}
+        </div>
+
       </div>
     </div>
 
@@ -102,4 +128,3 @@
 </section>
 
 {% endblock %}
-

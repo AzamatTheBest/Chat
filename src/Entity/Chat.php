@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use App\Repository\ChatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\User;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ChatRepository::class)]
 #[ORM\Table('chats')]
 class Chat
 {
@@ -26,7 +29,16 @@ class Chat
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'chat')]
     private Collection $messages;
 
-    private $users;
+	#[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'chats')]
+	#[ORM\JoinTable(name: 'users_chats')]
+    private Collection $users;
+
+
+	public function __construct()
+	{
+		$this->messages = new ArrayCollection();
+		$this->users = new ArrayCollection();
+	}
 
 
     public function getId() {
@@ -83,4 +95,22 @@ class Chat
 
 	
 	
+
+	
+	public function getUsers(): Collection {
+		return $this->users;
+	}
+	
+
+	public function setUsers(Collection $users): self {
+		$this->users = $users;
+		return $this;
+	}
+
+
+	public function addUserToChat(User $user)
+	{
+		$this->users->add($user);
+		return $this;
+	}
 }

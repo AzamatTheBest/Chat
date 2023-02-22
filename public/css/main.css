@@ -25,3 +25,35 @@ div.prototypes {
     padding: 12px 0 0 0;
     color: #59a6ff;
 }
+
+.chat-users {
+    position: absolute;
+    top: 0;
+    left: -210px;
+    height: 540px;
+    overflow-y: scroll;
+}
+.chat-user {
+    background-color: #f5f6f7;
+    width: 200px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.chat-user:hover {
+    background-color: #e4e4e4;
+}
+.chat-info {
+    margin-top: 10px;
+    
+}
+.chat-info p {
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+.chat-info p:last-child {
+    margin-left: 15px;
+}
+.chat-user .message-image {
+    margin-top: 10px;
+    margin-left: 5px;
+}
