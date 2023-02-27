@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $plainPassword;
 
 
-    private \DateTime $createdAt = date('H:i', 'Asia/Almaty');
+    private \DateTime $createdAt;
 
     public function getId(): ?int
     {
@@ -172,6 +172,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	 * @return \DateTime
 	 */
 	public function getCreatedAt(): \DateTime {
+        
 		return $this->createdAt;
 	}
 	
