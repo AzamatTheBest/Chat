@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ChatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\User;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -23,7 +24,7 @@ class Chat
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $title = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'array', nullable: true)]
     private ?string $description = null;
 
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'chat')]

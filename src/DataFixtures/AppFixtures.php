@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create();
 
-        foreach(range(1,3) as $i){
+        foreach(range(1,5) as $i){
             $user = new User();
             $user
                 ->setUsername($faker->userName())
@@ -35,6 +35,18 @@ class AppFixtures extends Fixture
                 ->setUsername($faker->userName())
                 ->setPassword($this->hasher->hashPassword($user, '12345'))
                 ->setRoles(['ROLE_ADMIN'])
+            ;
+    
+            $manager->persist($user);
+        }
+
+
+        foreach(range(1,35) as $i){
+            $user = new User();
+            $user
+                ->setUsername($faker->userName())
+                ->setPassword($this->hasher->hashPassword($user, '12345'))
+                ->setRoles(['ROLE_USER'])
             ;
     
             $manager->persist($user);
