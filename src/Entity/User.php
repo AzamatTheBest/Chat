@@ -46,6 +46,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private $plainPassword;
 
+
+    private \DateTime $createdAt = date('H:i', 'Asia/Almaty');
+
     public function getId(): ?int
     {
         return $this->id;
@@ -164,4 +167,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->chats = $chats;
         return $this;
     }
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getCreatedAt(): \DateTime {
+		return $this->createdAt;
+	}
+	
+	/**
+	 * @param \DateTime $createdAt 
+	 * @return self
+	 */
+	public function setCreatedAt(\DateTime $createdAt): self {
+		$this->createdAt = $createdAt;
+		return $this;
+	}
 }

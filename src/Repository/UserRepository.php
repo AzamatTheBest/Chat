@@ -68,6 +68,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
 
+    public function findUsersByUsername(string $username)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb
+            ->andWhere('u.username = ', $username)
+            
+        ;
+        return $qb->getQuery()->getResult();
+    }
+
+
+    public function findNewUsers(\DateTime $date)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb
+            ->andWhere('u.createdAt > ', $date)
+            
+        ;
+        return $qb->getQuery()->getResult();
+    }
     
 
 //    /**
