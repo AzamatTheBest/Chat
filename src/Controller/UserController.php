@@ -70,6 +70,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($imageId = $form->get('image')->getData()){
+                
                 $user->setImage($em->getRepository(Image::class)->find($imageId));
             }
             if ($user->getPlainPassword()){
@@ -82,7 +83,7 @@ class UserController extends AbstractController
 
         return $this->render('user_edit.html.twig', [
             'form' => $form->createView(),
-            
+            'user' => $user,
         ]);
     }
 }

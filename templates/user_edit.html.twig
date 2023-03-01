@@ -4,10 +4,9 @@
     
     {{ form_row(form.username)}}
     {{ form_row(form.plainPassword)}}
-    {{ form_row(form.image)}}
+    
     <div class="mb-3">
-       <h1>Hello</h1>
-       <img src="{% form.image %}"/>
+       <img src="/{{ user.image ? user.image.path }}" style="height: 200px; width: 200px;"/>
        <label class="btn btn-primary" for="upload-image">Upload Image</label>
        <input type="file" class="upload-image" id="upload-image" style="display: none;">
     </div>   
